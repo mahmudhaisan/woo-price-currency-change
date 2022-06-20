@@ -48,19 +48,25 @@ add_action('init', 'load_plugin_scripts');
  */
 function woo_single_page_before_title_callback() {
 
+    global $product;
+    $product_id = $product->get_id();
+    $product = wc_get_product($product_id);
+    $product_price_usd =  $product->get_regular_price();
+    $product_price_euro =  $product_price_usd * 0.95;
+    $product_price_aud =  $product_price_usd * 1.44;
 
 ?>
 
-    <form>
-        <div>
-            <input type="radio" id="aud" name="aud" value="AUD">
-            <label for="aud">AUD</label>
+    <form id="myForm">
+        <div id="">
+            <input type="radio" id="usd" name="currency" value="<?php echo $product_price_usd; ?>">
+            <label for="usd"><?php echo '$ ' . $product_price_usd; ?></label>
 
-            <input type="radio" id="euro" name="euro" value="EURO">
-            <label for="euro">EURO</label>
+            <input type="radio" id="euro" name="currency" value="<?php echo $product_price_euro; ?>">
+            <label for="euro"><?php echo '€ ' . $product_price_euro; ?></label>
 
-            <input type="radio" id="usd" name="usd" value="USD">
-            <label for="usd">USD</label>
+            <input type="radio" id="aud" name="currency" value="<?php echo $product_price_aud; ?>">
+            <label for="aud"><?php echo 'AUD$ ' . $product_price_aud; ?></label>
         </div>
     </form>
 
