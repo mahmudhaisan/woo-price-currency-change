@@ -1,0 +1,3 @@
+<?php
+
+echo PLUGINS_PATH_ASSETS;
