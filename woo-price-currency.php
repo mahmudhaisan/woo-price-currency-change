@@ -37,7 +37,11 @@ define("PLUGINS_PATH", plugin_dir_path(__FILE__));
 function load_plugin_scripts() {
     wp_enqueue_style('woo_currency_bootstrap', PLUGINS_PATH_ASSETS . 'css/style.css');
     wp_enqueue_script('woo_currency_script',  PLUGINS_PATH_ASSETS . 'js/script.js');
+
+    wp_localize_script('woo_currency_script', 'my_ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
 }
+
+
 add_action('init', 'load_plugin_scripts');
 
 
@@ -67,9 +71,26 @@ function woo_single_page_before_title_callback() {
 
             <input type="radio" id="aud" name="currency" value="<?php echo $product_price_aud; ?>">
             <label for="aud"><?php echo 'AUD$ ' . $product_price_aud; ?></label>
+
+            <input id="hidden-val" type="hidden" data-value="<?php echo admin_url('admin-ajax.php'); ?>">
+
+
         </div>
     </form>
 
 <?php }
 
 add_action('woocommerce_single_product_summary', 'woo_single_page_before_title_callback');
+
+
+
+/**
+ * remove single product price
+ *
+ * @return void
+ */
+function remove_single_product_price() {
+    remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_price', 10);
+}
+add_action('woocommerce_single_product_summary', 'remove_single_product_price', 1);
+require_once(PLUGINS_PATH . '/includes/ajax/price-change.php');
